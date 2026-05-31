@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Pending Approvals — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Pending Approvals</h1>
+{% include "manager/_request_table.html" with requests=pending_approvals %}
+{% endblock %}

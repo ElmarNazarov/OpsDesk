@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load request_tags %}
+{% block title %}Manager Dashboard — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Manager Dashboard</h1>
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card dashboard-card"><div class="card-body"><h2 class="h6 text-muted">Pending</h2><p class="h3">{{ stats.pending }}</p></div></div></div>
+  <div class="col-md-4"><div class="card dashboard-card"><div class="card-body"><h2 class="h6 text-muted">Approved</h2><p class="h3">{{ stats.approved }}</p></div></div></div>
+  <div class="col-md-4"><div class="card dashboard-card"><div class="card-body"><h2 class="h6 text-muted">Rejected</h2><p class="h3">{{ stats.rejected }}</p></div></div></div>
+</div>
+<h2 class="h5">Pending Approvals</h2>
+{% include "manager/_request_table.html" with requests=pending_approvals %}
+{% endblock %}

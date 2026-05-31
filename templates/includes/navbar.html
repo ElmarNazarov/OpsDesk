@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="{% url 'dashboard:home' %}">OpsDesk</a>
+    {% if user.is_authenticated %}
+    <div class="d-flex align-items-center gap-3">
+      <div class="dropdown" x-data="{ open: false }">
+        <button class="btn btn-outline-light btn-sm position-relative" @click="open = !open">
+          Notifications
+          {% if unread_notification_count %}
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ unread_notification_count }}
+          </span>
+          {% endif %}
+        </button>
+        <div class="dropdown-menu dropdown-menu-end show p-0" x-show="open" @click.outside="open = false" style="min-width: 280px;">
+          {% if recent_notifications %}
+            {% for n in recent_notifications %}
+            <a class="dropdown-item small {% if not n.is_read %}fw-semibold{% endif %}" href="{% url 'notifications:read' n.pk %}">
+              {{ n.title }}
+            </a>
+            {% endfor %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-center small" href="{% url 'notifications:list' %}">View all</a>
+          {% else %}
+            <span class="dropdown-item text-muted small">No notifications</span>
+          {% endif %}
+        </div>
+      </div>
+      <span class="text-light small">{{ user.full_name }}</span>
+      <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</nav>

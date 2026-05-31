@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Assign {{ asset.name }} — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Assign {{ asset.name }}</h1>
+{% if related_request %}<p class="alert alert-info">Fulfilling request {{ related_request.public_id }}</p>{% endif %}
+<form method="post" class="col-md-6">{% csrf_token %}{% for field in form %}<div class="mb-3"><label class="form-label">{{ field.label }}</label>{{ field }}</div>{% endfor %}<button class="btn btn-primary">Assign</button></form>
+{% endblock %}

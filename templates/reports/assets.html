@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Asset Reports — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Asset Reports</h1>
+<div class="col-md-8"><canvas id="deptChart"></canvas></div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const deptData = {{ department_chart|safe }};
+new Chart(document.getElementById('deptChart'), {type:'bar', data:{labels:deptData.labels, datasets:[{data:deptData.values, backgroundColor:'#198754'}]}, options:{plugins:{title:{display:true,text:'Assets Assigned by Department'}}}});
+</script>
+{% endblock %}

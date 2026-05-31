@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Request Reports — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Request Reports</h1>
+<p>Average approval time: <strong>{{ avg_approval_days }} days</strong></p>
+<div class="row g-4">
+  <div class="col-md-6"><canvas id="statusChart"></canvas></div>
+  <div class="col-md-6"><canvas id="categoryChart"></canvas></div>
+</div>
+<h2 class="h5 mt-4">Pending by Manager</h2>
+<ul class="list-group col-md-6">
+  {% for item in pending_by_manager %}
+  <li class="list-group-item d-flex justify-content-between">{{ item.manager }} <span class="badge bg-warning">{{ item.count }}</span></li>
+  {% empty %}<li class="list-group-item text-muted">None</li>{% endfor %}
+</ul>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const statusData = {{ status_chart|safe }};
+const categoryData = {{ category_chart|safe }};
+new Chart(document.getElementById('statusChart'), {type:'doughnut', data:{labels:statusData.labels, datasets:[{data:statusData.values}]}, options:{plugins:{title:{display:true,text:'By Status'}}}});
+new Chart(document.getElementById('categoryChart'), {type:'bar', data:{labels:categoryData.labels, datasets:[{data:categoryData.values, backgroundColor:'#0d6efd'}]}, options:{plugins:{title:{display:true,text:'By Category'}}}});
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+.sidebar {
+  min-height: calc(100vh - 56px);
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+}
+
+.sidebar-nav .nav-link {
+  color: #333;
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.sidebar-nav .nav-link:hover {
+  background: #e9ecef;
+}
+
+.dashboard-card {
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-item {
+  border-left: 3px solid #0d6efd;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.table-filters {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}

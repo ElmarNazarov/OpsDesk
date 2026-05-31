@@ -1,0 +1,19 @@
+{% load request_tags %}
+{% if requests %}
+<table class="table table-hover">
+  <thead><tr><th>ID</th><th>Title</th><th>Requester</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    {% for r in requests %}
+    <tr>
+      <td>{{ r.public_id }}</td>
+      <td>{{ r.title }}</td>
+      <td>{{ r.requester.full_name }}</td>
+      <td><span class="badge bg-{{ r.status|status_badge }}">{{ r.status|status_label }}</span></td>
+      <td><a href="{% url 'requests:detail' r.public_id %}">View</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state"><p>No requests to show.</p></div>
+{% endif %}

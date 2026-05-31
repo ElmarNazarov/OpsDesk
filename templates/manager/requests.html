@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Team Requests — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Team Requests</h1>
+{% include "manager/_request_table.html" with requests=team_requests %}
+{% endblock %}

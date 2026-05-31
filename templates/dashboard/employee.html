@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load request_tags %}
+{% block title %}Dashboard — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Employee Dashboard</h1>
+<div class="row g-3 mb-4">
+  {% for status, count in status_summary.items %}
+  <div class="col-md-3">
+    <div class="card dashboard-card">
+      <div class="card-body">
+        <span class="badge bg-{{ status|status_badge }}">{{ status|status_label }}</span>
+        <h2 class="h4 mt-2 mb-0">{{ count }}</h2>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><p class="text-muted">No requests yet.</p></div>
+  {% endfor %}
+</div>
+<div class="row">
+  <div class="col-md-8">
+    <h2 class="h5">My Open Requests</h2>
+    {% if open_requests %}
+    <table class="table table-hover">
+      <thead><tr><th>ID</th><th>Title</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for r in open_requests %}
+        <tr>
+          <td>{{ r.public_id }}</td>
+          <td>{{ r.title }}</td>
+          <td><span class="badge bg-{{ r.status|status_badge }}">{{ r.status|status_label }}</span></td>
+          <td><a href="{% url 'requests:detail' r.public_id %}">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state"><p>No open requests. <a href="{% url 'requests:create' %}">Create one</a></p></div>
+    {% endif %}
+  </div>
+  <div class="col-md-4">
+    <h2 class="h5">Recent Notifications</h2>
+    <ul class="list-group">
+      {% for n in recent_notifications %}
+      <li class="list-group-item small"><a href="{% url 'notifications:read' n.pk %}">{{ n.title }}</a></li>
+      {% empty %}
+      <li class="list-group-item text-muted">No notifications</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

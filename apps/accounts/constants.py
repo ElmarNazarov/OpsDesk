@@ -1,0 +1,13 @@
+GROUP_ADMIN = "Admin"
+GROUP_MANAGER = "Manager"
+GROUP_EMPLOYEE = "Employee"
+GROUP_OPS = "Ops"
+GROUP_HR = "HR"
+
+ALL_GROUPS = [
+    GROUP_ADMIN,
+    GROUP_MANAGER,
+    GROUP_EMPLOYEE,
+    GROUP_OPS,
+    GROUP_HR,
+]

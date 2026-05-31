@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load request_tags %}
+{% block title %}{{ request_obj.public_id }} — OpsDesk{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h1 class="h3">{{ request_obj.title }}</h1>
+    <p class="text-muted mb-0">{{ request_obj.public_id }} · {{ request_obj.category.name }}</p>
+  </div>
+  <div>
+    <span class="badge bg-{{ request_obj.priority|priority_badge }}">{{ request_obj.get_priority_display }}</span>
+    <span class="badge bg-{{ request_obj.status|status_badge }}">{{ request_obj.status|status_label }}</span>
+  </div>
+</div>
+<p>{{ request_obj.description }}</p>
+<div class="mb-4">
+  {% if can_edit %}
+  <a href="{% url 'requests:edit' request_obj.public_id %}" class="btn btn-outline-primary btn-sm">Edit</a>
+  <form method="post" action="{% url 'requests:submit' request_obj.public_id %}" class="d-inline">{% csrf_token %}<button class="btn btn-primary btn-sm">Submit</button></form>
+  {% endif %}
+  {% if request_obj.status != 'CANCELLED' and request_obj.status != 'FULFILLED' and request_obj.status != 'REJECTED' %}
+  <button class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse" data-bs-target="#cancelForm">Cancel</button>
+  {% endif %}
+  {% if can_approve %}
+  <form method="post" action="{% url 'requests:approve' request_obj.public_id %}" class="d-inline">{% csrf_token %}{{ approval_form.comment }}<button class="btn btn-success btn-sm">Approve</button></form>
+  {% endif %}
+  {% if can_reject %}
+  <form method="post" action="{% url 'requests:reject' request_obj.public_id %}" class="d-inline">{% csrf_token %}<button class="btn btn-danger btn-sm">Reject</button></form>
+  {% endif %}
+</div>
+<div class="collapse mb-3" id="cancelForm">
+  <form method="post" action="{% url 'requests:cancel' request_obj.public_id %}">
+    {% csrf_token %}{{ cancel_form.reason }}
+    <button class="btn btn-danger btn-sm mt-2">Confirm Cancel</button>
+  </form>
+</div>
+<div class="row">
+  <div class="col-md-7">
+    <h2 class="h5">Comments</h2>
+    {% for c in comments %}
+    <div class="card mb-2 {% if c.is_internal %}border-warning{% endif %}">
+      <div class="card-body py-2">
+        <strong>{{ c.author.full_name }}</strong>
+        {% if c.is_internal %}<span class="badge bg-warning text-dark">Internal</span>{% endif %}
+        <p class="mb-0 small">{{ c.body }}</p>
+      </div>
+    </div>
+    {% empty %}<p class="text-muted">No comments yet.</p>{% endfor %}
+    <form method="post" action="{% url 'requests:comment' request_obj.public_id %}" class="mt-3">
+      {% csrf_token %}
+      {{ comment_form.body }}
+      {% if user.is_manager or user.is_ops or user.is_hr or user.is_admin_role %}
+      <div class="form-check mt-2">{{ comment_form.is_internal }} <label class="form-check-label">Internal</label></div>
+      {% endif %}
+      <button class="btn btn-outline-primary btn-sm mt-2">Add Comment</button>
+    </form>
+  </div>
+  <div class="col-md-5">
+    <h2 class="h5">Status Timeline</h2>
+    {% for h in status_history %}
+    <div class="timeline-item">
+      <strong>{{ h.to_status|status_label }}</strong>
+      <p class="small text-muted mb-0">{{ h.changed_by.full_name|default:"System" }} · {{ h.created_at }}</p>
+      {% if h.reason %}<p class="small">{{ h.reason }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

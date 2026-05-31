@@ -1,0 +1,60 @@
+[project]
+name = "opsdesk"
+version = "0.1.0"
+description = "Internal company operations portal built with Django"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.0,<6",
+    "psycopg[binary]>=3.1",
+    "django-environ>=0.11",
+    "celery[redis]>=5.3",
+    "redis>=5.0",
+    "pillow>=10.0",
+    "gunicorn>=22.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-debug-toolbar>=4.4",
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "factory-boy>=3.3",
+    "coverage>=7.5",
+    "ruff>=0.4",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["apps*", "config*"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.test"
+python_files = ["test_*.py", "*_test.py"]
+pythonpath = ["."]
+addopts = "-v --tb=short"
+testpaths = ["tests", "apps"]
+
+[tool.coverage.run]
+source = ["apps", "config"]
+omit = ["*/migrations/*", "*/tests/*", "manage.py"]
+
+[tool.coverage.report]
+fail_under = 70
+show_missing = true
+skip_covered = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config"]

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load request_tags %}
+{% block title %}Admin Dashboard — OpsDesk{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Admin Dashboard</h1>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card dashboard-card"><div class="card-body"><h2 class="h6 text-muted">Total Requests</h2><p class="h3 mb-0">{{ total_requests }}</p></div></div>
+  </div>
+  <div class="col-md-4">
+    <div class="card dashboard-card"><div class="card-body"><h2 class="h6 text-muted">Active Users</h2><p class="h3 mb-0">{{ active_users }}</p></div></div>
+  </div>
+</div>
+<div class="row g-4">
+  <div class="col-md-6">
+    <h2 class="h5">Requests by Category</h2>
+    <ul class="list-group">
+      {% for item in requests_by_category %}
+      <li class="list-group-item d-flex justify-content-between">{{ item.category__name }} <span class="badge bg-primary">{{ item.count }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <h2 class="h5">Requests by Status</h2>
+    <ul class="list-group">
+      {% for item in requests_by_status %}
+      <li class="list-group-item d-flex justify-content-between">
+        <span class="badge bg-{{ item.status|status_badge }}">{{ item.status|status_label }}</span>
+        <span>{{ item.count }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<h2 class="h5 mt-4">Recent Audit Logs</h2>
+<table class="table table-sm">
+  <thead><tr><th>Action</th><th>Actor</th><th>Entity</th><th>When</th></tr></thead>
+  <tbody>
+    {% for log in recent_audit_logs %}
+    <tr><td>{{ log.action }}</td><td>{{ log.actor.email|default:"—" }}</td><td>{{ log.entity_type }} #{{ log.entity_id }}</td><td>{{ log.created_at }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
